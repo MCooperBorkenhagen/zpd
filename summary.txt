@@ -1,0 +1,65 @@
+An essential aspect of teaching concerns the selection of what should be taught next to the learner. It is an important function of anyone making decisions about the learning of another, whether it be a teacher for a student, caregiver for a child, and beyond. In an important sense, the learner's development depends on it for learning success.
+
+The prevailing educational concept about this decision-making process is that the learner has, at any particular point in time, some experience that is ideally suited to push the learner's knowledge forward towards the learning objective. Vygotsky (1978) described this as the zone of proximal development: the difference between how the learner can perform on their own versus performance attainable with appropriate guidance from a teacher. This idea is a ubiquitous concept in education.
+
+
+
+
+ , and extant research concerns philosophical and social cultural aspects of teacher-student interaction (e.g., Wertsch, 1984; Nicholas, Veresov, & Cripps Clark, 2021) rather than empirical science. 
+
+
+
+In this sense, the construct is rarely, if ever formalized. The construct exists as a truism of instruction: teach next what you think is best for your learner. This lack of formalization is due to the fact that instructional conditions under which these decisions take place are high dimensional, and specific to the particular knowledge domain. For example, considerations when making decisions about teaching multiplication tables are naturally quite different than when teaching a child to sound out printed words. The intuition about ZPD is nonetheless very useful to talk about learning in both contexts, despite the challenge with defining the "zone" concretely.
+
+Research investigating the ZPD has primarily focused on the nature of the social interaction associated with performance in the ZPD. This makes sense given the social and cultural orientation of Vygotsky's original theorizing. Research on instructional interaction along these lines has shown that 
+
+
+
+Furthermore, computers can serve as a proxy
+
+
+This is a potential problem for variability of implementation. In absence of a formal definition, teachers and caregivers will have very different ideas about what the ZPD is for a given child. There are a number of likely contingencies. First, what is the basis for measurement when selecting next learning trials? A number of possibilities exist here. New learning trials can be selected based on the observed accuracy of previous trials, the similarity of previous, or potentially jointly by both of these.
+
+The proposed research seeks to implement concretely a conception of ZPD that takes into consideration both (a) the learner's performance as a criteria for selecting next learning experiences, and (b) the structural properties of the learning domain. Experimentation will involve well-established models of human learning implemented as computational simulations.
+
+
+
+Primary Research Questions
+1. What quantifiable properties of the learner's knowledge and performance best allow for the identification of the zone of proximal development?
+2. To what extent does learning vary as a function of different specification of (1)?
+
+Secondary Research Questions
+1. To what extent does the zone of proximal development differ depending on the structure of the learning domain?
+
+
+Research Methods
+Data & Measures
+
+
+Analytic Plan
+
+Anticipated External Funding
+
+Schedule of Project Activities
+
+Budget
+
+Differentiation from Dissertation Research
+
+
+Mentoring Plan
+
+Professional Obligations
+
+Previous Awards or Grant Funding Received
+
+References
+
+
+Nicholas, M., Veresov, N., & Clark, J. C. (2021). Guided reading–Working within a child's zone of proximal development. Learning, Culture and Social Interaction, 30, 100530.
+
+
+
+
+Extensions
+Here only a few most relevant dimensions of the ZPD have been named; A number of additional dimensions of the ZPD should be considered in future work. For example, to what extent does learning success vary based on the number of learning elements considered for teaching within the ZPD?
