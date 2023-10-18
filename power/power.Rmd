@@ -1,0 +1,37 @@
+---
+title: "power"
+output: html_document
+date: "2023-10-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+To determine the lamda ($\lambda$) value, calculate 
+
+$\lambda = n \times f^2$
+
+Where `n` here is determined by the number of observations per cell here (`n` = 2,000).
+
+The critical value for a chi-square distribution is given as:
+
+$\text{cvcd} = \chi^2_{1-\alpha, \text{df}}$
+
+And the calculation of power:
+
+$\text{power} = 1 - P\left(\chi^2 \leq \text{cvcd} \,|\, \text{ncp} = \lambda, \text{df}\right)$
+
+```{r}
+# lamda, alpha, and df
+lambda = 2000*0.22^2
+alpha = 0.05
+df = 1
+
+
+# The critical value for the central distribution using chi-square
+cvcd = qchisq(1 - alpha, df)
+power = 1 - pchisq(cvcd, df, ncp = lambda)
+
+```
