@@ -25,7 +25,7 @@ $\text{power} = 1 - P\left(\chi^2 \leq \text{cvcd} \,|\, \text{ncp} = \lambda, \
 
 ```{r}
 # lamda, alpha, and df
-lambda = 2000*0.22^2
+lambda = 2000*0.5^2
 alpha = 0.05
 df = 1
 
