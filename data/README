@@ -1,0 +1,16 @@
+
+The top 500 data set (or any top_N set)
+represents the top N words from kidwords
+that are also in the EWFG/TASA set and
+in the ELP set, ranked by frequency
+(i.e., the nth ranked word is the nth most
+frequent word, based on the TASA frequencies).
+
+Frequencies are calculated based on the 
+cumulative frequencies for levels 1-4 in
+the EWFG/TASA data (which is up to and
+including 3rd grade).
+
+See data.Rmd for write details on these
+files. Note that kidwords/ is an independent
+github repository.

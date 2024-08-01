@@ -1,0 +1,62 @@
+---
+title: "Training and Test Words"
+output: html_document
+date: "2024-07-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(tidyverse)
+
+elp = read_csv('../words/elp/elp_full_5.27.16.csv')$Word
+
+```
+
+Let's select a subset of words that are very common for the training subset used. We are going to ensure that the words are both in the ELP dataset and in TASA.
+
+```{r}
+kidwords = read_csv('data/kidwords/kidwords.csv', col_names = F)$X1
+
+frequencies = read_csv('../words/tasa/tasa.csv') %>% 
+  filter(level <= 4) %>%
+  group_by(word) %>% 
+  summarise(frequency = sum(frequency, na.rm = T)) %>% 
+  filter(word %in% kidwords) %>% 
+  filter(word %in% elp) %>% 
+  arrange(desc(frequency)) %>% 
+  mutate(rank = seq_len(n()))
+  
+frequencies %>% 
+  ggplot(aes(rank, frequency)) +
+  geom_point() +
+  geom_vline(xintercept = 250, color = "firebrick4") +
+  geom_vline(xintercept = 500, color = "goldenrod") +
+  geom_vline(xintercept = 1000, color = "black")
+
+```
+
+Let's go with 500 for now, at least for pilot. We have reason to think that finding a large number of monosyllabic words in Spanish (that are also common) will be difficult, so for experimentation we will keep the N smaller in both language conditions.
+
+```{r}
+
+frequencies %>% 
+  filter(rank <= 500) %>% 
+  select(word, frequency) %>% 
+  write_csv('data/top_500.csv', col_names = F)
+
+```
+
+
+Here's another write but for the top 175 words.
+
+```{r}
+
+
+frequencies %>% 
+  filter(rank <= 175) %>% 
+  select(word) %>% 
+  write_csv('data/top_175.csv', col_names = F)
+
+```
+
