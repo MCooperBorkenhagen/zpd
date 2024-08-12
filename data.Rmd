@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 require(tidyverse)
 
 elp = read_csv('../words/elp/elp_full_5.27.16.csv')$Word
+set.seed(879)
 
 ```
 
@@ -42,8 +43,8 @@ Let's go with 500 for now, at least for pilot. We have reason to think that find
 
 frequencies %>% 
   filter(rank <= 500) %>% 
-  select(word, frequency) %>% 
-  write_csv('data/top_500.csv', col_names = F)
+  select(word, frequency) %>%
+  write_csv('data/top_500.csv')
 
 ```
 
@@ -51,12 +52,24 @@ frequencies %>%
 Here's another write but for the top 175 words.
 
 ```{r}
-
-
 frequencies %>% 
   filter(rank <= 175) %>% 
   select(word) %>% 
   write_csv('data/top_175.csv', col_names = F)
+
+```
+
+# Select 500 words that are infrequent.
+These will be for our comparison condition in analyzing different two representational domains.
+
+```{r}
+
+frequencies %>% 
+  filter(frequency <= 16) %>%
+  slice_sample(n = 500) %>% 
+  select(word, frequency) %>% 
+  write_csv('data/infrequent_500.csv')
+
 
 ```
 
