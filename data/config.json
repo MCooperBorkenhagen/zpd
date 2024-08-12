@@ -1,0 +1,8 @@
+{
+    "N": 20,
+    "seed": 323,
+    "hidden_units": 30,
+    "learning_rate": 0.005,
+    "batch_size": 10,
+    "epochs": 100
+}
