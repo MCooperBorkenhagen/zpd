@@ -1,0 +1,42 @@
+---
+title: "Tuning"
+output: html_document
+date: "2024-08-09"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(tidyverse)
+require(knitr)
+
+tune_2 = read_csv('outputs/tune_top_500_v2.csv')
+
+```
+
+Look at distribution of accuracy for tuned models in `pilot_1`.
+
+```{r}
+tune_2 %>% 
+  ggplot(aes(accuracy_train)) +
+  geom_histogram(color = "black") +
+  theme_minimal()
+```
+
+Examine highest performing pilot models:
+
+```{r}
+tune_2 %>% 
+  filter(accuracy_train == max(tune_2$accuracy_train)) %>% 
+  arrange(desc(accuracy_test)) %>% 
+  select(hidden_units, learning_rate, batch_size, epochs, accuracy_test, loss_test, mse_test) %>%
+  head() %>% 
+  kable()
+```
+
+We will go with the hyperparameters that show the highest train accuracy, and the highest test accuracy, lowest test loss, and lowest test error:
+
+Hidden units: 30
+Learning rate: .005
+Batch size: 10
+Epochs: 100

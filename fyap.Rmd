@@ -1,0 +1,84 @@
+---
+title: "FYAP Poster"
+output: html_document
+date: "2024-08-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(tidyverse)
+require(Hmisc)
+require(papaja)
+require(cowplot)
+
+pilot_1 = read_csv('outputs/max_values_mse_samples.csv') %>%
+  mutate(condition = "mse_max") %>% 
+  rbind(read_csv('outputs/75th_percentile_values_mse_samples.csv') %>% 
+              mutate(condition = "mse_75ile")) %>% 
+  rbind(read_csv('outputs/50th_percentile_values_mse_samples.csv') %>% 
+              mutate(condition = "mse_50ile")) %>% 
+  mutate(epoch = epoch + 1)
+  
+```
+
+
+```{r}
+
+
+plot_1 = pilot_1 %>%
+  filter(epoch %in% seq(from = 50, to = 510, by = 40)) %>% 
+  group_by(condition, epoch) %>% 
+  summarise(acc = mean(accuracy_train),
+            SD = sd(accuracy_train),
+            SEM = SD/sqrt(nrow(frequencies)-500)) %>% 
+  ggplot(aes(epoch, acc, group = condition, color = condition)) +
+  geom_line(color = "black", size = .1) +
+  geom_point(size = .1) +
+  geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
+  scale_color_brewer(palette = "Set1") +
+  theme_apa() +
+  theme(legend.position = "none")
+
+
+plot_2 = pilot_1 %>%
+  filter(epoch %in% seq(from = 50, to = 510, by = 40)) %>% 
+  group_by(condition, epoch) %>% 
+  summarise(acc = mean(accuracy_remaining_train_pool),
+            SD = sd(accuracy_remaining_train_pool),
+            SEM = SD/sqrt(nrow(frequencies)-500)) %>% 
+  ggplot(aes(epoch, acc, group = condition, color = condition)) +
+  geom_line(color = "black", size = .1) +
+  geom_point(size = .1) +
+  geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
+  scale_color_brewer(palette = "Set1") +
+  theme_apa() +
+  theme(legend.position = "none")
+
+plot_3 = pilot_1 %>%
+  filter(epoch %in% seq(from = 50, to = 510, by = 40)) %>% 
+  group_by(condition, epoch) %>% 
+  summarise(acc = mean(accuracy_test),
+            SD = sd(accuracy_test),
+            SEM = SD/sqrt(nrow(frequencies)-500)) %>% 
+  ggplot(aes(epoch, acc, group = condition, color = condition)) +
+  geom_line(color = "black", size = .1) +
+  geom_point(size = .1) +
+  geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
+  scale_color_brewer(palette = "Set1") +
+  theme_apa() +
+  theme(legend.position = "none")
+
+plot_grid(plot_1, plot_2, plot_3, nrow = 1)
+```
+
+
+Check...
+```{r}
+
+read_csv('outputs/50th_percentile_values_mse_samples.csv') %>% 
+  distinct(seed)
+
+```
+
+
