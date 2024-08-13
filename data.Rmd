@@ -73,3 +73,12 @@ frequencies %>%
 
 ```
 
+## Write the frequencies to all the kidwords
+
+```{r}
+frequencies %>% 
+  write_csv('data/kidword_frequencies_from_tasa.csv')
+
+
+```
+
