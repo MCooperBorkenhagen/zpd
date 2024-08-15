@@ -12,13 +12,56 @@ require(Hmisc)
 require(papaja)
 require(cowplot)
 
-pilot_1 = read_csv('outputs/max_values_mse_samples.csv') %>%
-  mutate(condition = "mse_max") %>% 
-  rbind(read_csv('outputs/75th_percentile_values_mse_samples.csv') %>% 
-              mutate(condition = "mse_75ile")) %>% 
-  rbind(read_csv('outputs/50th_percentile_values_mse_samples.csv') %>% 
-              mutate(condition = "mse_50ile")) %>% 
-  mutate(epoch = epoch + 1)
+pilot_1 = read_csv('outputs/v2/max_values_mse_samples.csv') %>%
+  mutate(train_method = "difficulty_only",
+         condition = "Maximum",
+         order = 5) %>% 
+  rbind(read_csv('outputs/v2/75th_percentile_values_mse_samples.csv') %>%
+          mutate(train_method = "difficulty_only",
+          condition = "75th %ile",
+                     order = 4)) %>% 
+  rbind(read_csv('outputs/v2/50th_percentile_values_mse_samples.csv') %>% 
+          mutate(train_method = "difficulty_only",
+          condition = "50th %ile",
+                     order = 3)) %>% 
+  rbind(read_csv('outputs/v2/25th_percentile_values_mse_samples.csv') %>% 
+          mutate(train_method = "difficulty_only",
+          condition = "25th %ile",
+          order = 2)) %>% 
+    rbind(read_csv('outputs/v2/min_values_mse_samples.csv') %>% 
+          mutate(train_method = "difficulty_only",
+          condition = "Minimum values",
+          order = 1)) %>% 
+    rbind(read_csv('outputs/v2/random_values_mse_samples.csv') %>% 
+          mutate(train_method = "difficulty_only",
+          condition = "Random",
+          order = 6)) %>% 
+    rbind(read_csv('outputs/v3/max_values_nearest_neighbor_samples.csv') %>%
+            mutate(train_method = "difficulty_and_similarity",
+            condition = "Maximum",
+                       order = 5)) %>% 
+    rbind(read_csv('outputs/v3/75th_percentile_values_nearest_neighbor_samples.csv') %>%
+            mutate(train_method = "difficulty_and_similarity",
+            condition = "75th %ile",
+                       order = 4)) %>% 
+    rbind(read_csv('outputs/v3/50th_percentile_values_nearest_neighbor_samples.csv') %>%
+            mutate(train_method = "difficulty_and_similarity",
+            condition = "50th %ile",
+                       order = 3)) %>% 
+    rbind(read_csv('outputs/v3/25th_percentile_values_nearest_neighbor_samples.csv') %>%
+            mutate(train_method = "difficulty_and_similarity",
+            condition = "25th %ile",
+                       order = 2)) %>% 
+    rbind(read_csv('outputs/v3/min_values_nearest_neighbor_samples.csv') %>%
+            mutate(train_method = "difficulty_and_similarity",
+            condition = "Minimum values",
+                       order = 1)) %>% 
+    rbind(read_csv('outputs/v3/random_values_nearest_neighbor_samples.csv') %>%
+            mutate(train_method = "difficulty_and_similarity",
+            condition = "Random",
+                       order = 6)) %>% 
+  mutate(epoch = epoch + 1) %>% 
+  filter(condition != "Minimum values")
   
 ```
 
@@ -27,7 +70,103 @@ pilot_1 = read_csv('outputs/max_values_mse_samples.csv') %>%
 
 
 plot_1 = pilot_1 %>%
-  filter(epoch %in% seq(from = 50, to = 510, by = 40)) %>% 
+  filter(epoch %in% seq(from = 50, to = 810, by = 40)) %>% 
+  group_by(train_method, condition, epoch) %>% 
+  summarise(acc = mean(accuracy_train),
+            SD = sd(accuracy_train),
+            SEM = SD/sqrt(nrow(frequencies)-500)) %>% 
+  mutate(train_method = case_when(train_method == "difficulty_only" ~ "Difficulty only",
+                            train_method == "difficulty_and_similarity" ~ "Difficulty & similarity",
+                            TRUE ~ NA)) %>% 
+  ggplot(aes(epoch, acc, group = condition, color = condition)) +
+  geom_line(color = "black", size = .1) +
+  geom_point(size = .1) +
+  geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
+  scale_color_brewer(palette = "Set1") +
+  theme_apa() +
+  theme(legend.position = c(.72, .65)) +
+  labs(title = "Training set accuracy",
+       x = "Learning time",
+       y = "Accuracy",
+       color = "Difficulty level") +
+  facet_grid(vars(train_method))
+
+
+plot_2 = pilot_1 %>%
+  filter(epoch %in% seq(from = 50, to = 810, by = 40)) %>% 
+  group_by(train_method, condition, epoch) %>% 
+  summarise(acc = mean(accuracy_remaining_train_pool),
+            SD = sd(accuracy_remaining_train_pool),
+            SEM = SD/sqrt(nrow(frequencies)-500)) %>% 
+  mutate(train_method = case_when(train_method == "difficulty_only" ~ "Difficulty only",
+                            train_method == "difficulty_and_similarity" ~ "Difficulty & similarity",
+                            TRUE ~ NA)) %>% 
+  ggplot(aes(epoch, acc, group = condition, color = condition)) +
+  geom_line(color = "black", size = .1) +
+  geom_point(size = .1) +
+  geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
+  scale_color_brewer(palette = "Set1") +
+  theme_apa() +
+  theme(legend.position = "none") +
+  labs(title = "Remaining training pool accuracy",
+       x = "Learning time",
+       y = "Accuracy") +
+  facet_grid(vars(train_method))
+
+plot_3 = pilot_1 %>%
+  filter(epoch %in% seq(from = 50, to = 810, by = 40)) %>% 
+  group_by(train_method, condition, epoch) %>% 
+  summarise(acc = mean(accuracy_test),
+            SD = sd(accuracy_test),
+            SEM = SD/sqrt(nrow(frequencies)-500)) %>% 
+  mutate(train_method = case_when(train_method == "difficulty_only" ~ "Difficulty only",
+                            train_method == "difficulty_and_similarity" ~ "Difficulty & similarity",
+                            TRUE ~ NA)) %>% 
+  ggplot(aes(epoch, acc, group = condition, color = condition)) +
+  geom_line(color = "black", size = .1) +
+  geom_point(size = .1) +
+  geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
+  scale_color_brewer(palette = "Set1") +
+  theme_apa() +
+  theme(legend.position = "none") +
+  labs(title = "Test set accuracy",
+       x = "Learning time",
+       y = "Accuracy") +
+  facet_grid(vars(train_method))
+
+plot_grid(plot_1, plot_2, plot_3, nrow = 1)
+
+```
+
+
+Check...
+```{r}
+
+read_csv('outputs/v3/max_values_nearest_neighbor_samples.csv') %>% 
+  ggplot(aes(epoch, accuracy_remaining_train_pool, group = seed, color = seed)) +
+  geom_line(color = "black", size = .1) +
+  geom_point(size = .1) +
+  #geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
+  #scale_color_brewer(palette = "Set1") +
+  theme_apa() +
+  theme(legend.position = "none") +
+  labs(title = "Remaining training pool accuracy")
+
+
+read_csv('outputs/v3/max_values_nearest_neighbor_samples.csv') %>% 
+  ggplot(aes(epoch, accuracy_train, group = seed, color = seed)) +
+  geom_line(color = "black", size = .1) +
+  geom_point(size = .1) +
+  #geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
+  #scale_color_brewer(palette = "Set1") +
+  theme_apa() +
+  theme(legend.position = "none") +
+  labs(title = "Remaining training pool accuracy")
+
+
+
+plot_1 = pilot_1 %>%
+  filter(epoch %in% seq(from = 50, to = 810, by = 40)) %>% 
   group_by(condition, epoch) %>% 
   summarise(acc = mean(accuracy_train),
             SD = sd(accuracy_train),
@@ -38,11 +177,12 @@ plot_1 = pilot_1 %>%
   geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
   scale_color_brewer(palette = "Set1") +
   theme_apa() +
-  theme(legend.position = "none")
+  theme(legend.position = c(.7, .25)) +
+  labs(title = "Training set accuracy")
 
 
 plot_2 = pilot_1 %>%
-  filter(epoch %in% seq(from = 50, to = 510, by = 40)) %>% 
+  filter(epoch %in% seq(from = 50, to = 810, by = 40)) %>% 
   group_by(condition, epoch) %>% 
   summarise(acc = mean(accuracy_remaining_train_pool),
             SD = sd(accuracy_remaining_train_pool),
@@ -53,10 +193,11 @@ plot_2 = pilot_1 %>%
   geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
   scale_color_brewer(palette = "Set1") +
   theme_apa() +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  labs(title = "Remaining training pool accuracy")
 
 plot_3 = pilot_1 %>%
-  filter(epoch %in% seq(from = 50, to = 510, by = 40)) %>% 
+  filter(epoch %in% seq(from = 50, to = 810, by = 40)) %>% 
   group_by(condition, epoch) %>% 
   summarise(acc = mean(accuracy_test),
             SD = sd(accuracy_test),
@@ -67,17 +208,11 @@ plot_3 = pilot_1 %>%
   geom_errorbar(aes(ymin = acc - SEM, ymax = acc + SEM), width = 6) +
   scale_color_brewer(palette = "Set1") +
   theme_apa() +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  labs(title = "Test set accuracy")
 
 plot_grid(plot_1, plot_2, plot_3, nrow = 1)
-```
 
-
-Check...
-```{r}
-
-read_csv('outputs/50th_percentile_values_mse_samples.csv') %>% 
-  distinct(seed)
 
 ```
 
